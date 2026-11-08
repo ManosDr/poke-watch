@@ -1,0 +1,5 @@
+poke_watch.env
+poke_watch.log
+debug/
+__pycache__/
+*.tmp

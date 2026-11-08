@@ -393,13 +393,19 @@ def learn_template(url: str, query: str):
 # ----------------------------------------------------------- notifications
 
 def _post(url: str, data: bytes, headers: dict) -> bool:
-    try:
-        req = urllib.request.Request(url, data=data, headers=headers, method="POST")
-        with urllib.request.urlopen(req, timeout=20) as resp:
-            return 200 <= resp.status < 300
-    except Exception as e:
-        log(f"  ! couldn't send notification via {url.split('/bot')[0]}: {short(e)}")
-        return False
+    for attempt in (1, 2):  # one retry: a network blip shouldn't cost you an alert
+        try:
+            req = urllib.request.Request(url, data=data, headers=headers, method="POST")
+            with urllib.request.urlopen(req, timeout=20) as resp:
+                if 200 <= resp.status < 300:
+                    return True
+                raise RuntimeError(f"HTTP {resp.status}")
+        except Exception as e:
+            if attempt == 2:
+                log(f"  ! couldn't send notification via {url.split('/bot')[0]}: {short(e)}")
+            else:
+                time.sleep(3)
+    return False
 
 
 def notify(title: str, message: str, url: str | None = None, priority: int = 4, tags=None,
@@ -428,20 +434,19 @@ def notify(title: str, message: str, url: str | None = None, priority: int = 4, 
     return sent
 
 
-def send_alert(item: dict) -> None:
+def send_alert(item: dict) -> bool:
     title = f"{STATUS_TEXT[item['status']].capitalize()}: {item['kind']} at {item['shop']}"
     price = money(item["price"]) if item["price"] is not None else "price not shown"
     message = f"{item['name']}\n{price} (your cap €{item['cap']})"
-    notify(title, message, item["url"], priority=5 if item["status"] == "in_stock" else 4,
-           tags=["rotating_light"])
+    return notify(title, message, item["url"], priority=5 if item["status"] == "in_stock" else 4,
+                  tags=["rotating_light"])
 
 
-def send_alerts(alerts: list) -> None:
-    """One push per item, or a single summary when a run finds a lot at once."""
+def send_alerts(alerts: list) -> list:
+    """One push per item, or a single summary when a run finds a lot at once.
+    Returns the items whose push didn't go out, so the next run can try again."""
     if len(alerts) <= MAX_SEPARATE_ALERTS:
-        for item in alerts:
-            send_alert(item)
-        return
+        return [item for item in alerts if not send_alert(item)]
     alerts = sorted(alerts, key=lambda i: (i["status"] != "in_stock", -(i["price"] or 0)))
     groups = {}  # e.g. ten Mini Tin designs from one shop at one price become one line
     for i in alerts:
@@ -456,8 +461,9 @@ def send_alerts(alerts: list) -> None:
         lines.append(f"...and {len(groups) - 15} more")
     firsts = [items[0] for items in groups.values()]
     actions = [{"action": "view", "label": f"{i['kind'][:16]} {money(i['price'])}", "url": i["url"]} for i in firsts[:3]]
-    notify(f"{len(alerts)} Pokémon 30th items at retail price", "\n".join(lines), firsts[0]["url"],
-           priority=5, tags=["rotating_light"], actions=actions, telegram_text="\n".join(tg_lines))
+    sent = notify(f"{len(alerts)} Pokémon 30th items at retail price", "\n".join(lines), firsts[0]["url"],
+                  priority=5, tags=["rotating_light"], actions=actions, telegram_text="\n".join(tg_lines))
+    return [] if sent else list(alerts)
 
 
 def send_new_listing(item: dict) -> None:
@@ -1065,10 +1071,18 @@ def run_once(args) -> int:
                             rec["alerted"] = False
                 sstate["seeded"] = True
         browser.close()
+    failed = []
     if not args.test:
-        send_alerts(alerts)
+        failed = send_alerts(alerts)
+        for item in failed:  # the push didn't reach you: don't count it as told, try again next run
+            if item["url"] in state["items"]:
+                state["items"][item["url"]]["alerted"] = False
         save_state(state)
-    log(f"Done: {len(alerts)} alert(s) sent." if not args.test else "Test run finished.")
+    if args.test:
+        log("Test run finished.")
+    else:
+        log(f"Done: {len(alerts) - len(failed)} alert(s) sent."
+            + (f" {len(failed)} couldn't be sent and will be retried next run." if failed else ""))
     return 0
 
 
