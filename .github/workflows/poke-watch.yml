@@ -1,0 +1,66 @@
+name: Poke watch
+
+on:
+  schedule:
+    # Every hour at :17 (UTC). GitHub can start scheduled runs a few minutes late.
+    # In a private repo use "17 */4 * * *" (every 4 hours) to stay inside the free minutes.
+    - cron: "17 * * * *"
+  workflow_dispatch:       # adds a "Run workflow" button for a manual check
+    inputs:
+      test_push:
+        description: "Send a test push to your phone first"
+        type: boolean
+        default: true
+
+permissions:
+  contents: write         # lets the job save state.json back to the repo
+
+concurrency:
+  group: poke-watch
+  cancel-in-progress: false
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Test push
+        if: ${{ inputs.test_push }}
+        run: python poke_watch.py --notify-test
+        env:
+          NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+
+      - name: Install
+        run: |
+          pip install -r requirements.txt
+          python -m playwright install --with-deps chromium
+
+      - name: Check shops
+        run: python poke_watch.py
+        env:
+          NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+
+      - name: Save state
+        if: always()
+        run: |
+          if [ -f state.json ]; then
+            git config user.name "poke-watch"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add state.json
+            if ! git diff --cached --quiet; then
+              git commit -m "Update stock state"
+              git pull --rebase --quiet
+              git push --quiet
+            fi
+          fi
