@@ -8,6 +8,7 @@ one is buyable under your price cap.
   python poke_watch.py --test          dry run: show what every shop returns, send nothing
   python poke_watch.py                 one real check (this is what the scheduler runs)
   python poke_watch.py --every 60      stay running and check every 60 minutes
+  python poke_watch.py --shop "Public,Kaissa"        only these shops (--skip-shop: all but these)
 
 Needs:  pip install playwright    then    python -m playwright install chromium
 Secrets come from environment variables or a poke_watch.env file next to this script:
@@ -1006,11 +1007,20 @@ def report(item: dict, kind, test: bool) -> None:
 
 # ------------------------------------------------------------------- runs
 
+def pick_shops(only=None, skip=None) -> list:
+    """Shops to check. Both take comma-separated names; part of a name is enough ("public,kaissa")."""
+    def names(text):
+        return [n.strip().lower() for n in (text or "").split(",") if n.strip()]
+    want, drop = names(only), names(skip)
+    return [s for s in SHOPS if (not want or any(w in s["name"].lower() for w in want))
+            and not any(d in s["name"].lower() for d in drop)]
+
+
 def run_once(args) -> int:
     from playwright.sync_api import sync_playwright
 
     state, now = load_state(), time.time()
-    shops = [s for s in SHOPS if not args.shop or args.shop.lower() in s["name"].lower()]
+    shops = pick_shops(args.shop, getattr(args, "skip_shop", None))
     if not shops:
         raise SystemExit(f"No shop matches '{args.shop}'. Shops: {', '.join(s['name'] for s in SHOPS)}")
     log(f"Checking {', '.join(s['name'] for s in shops)}" + (" (test run: nothing is sent or saved)" if args.test else ""))
@@ -1104,7 +1114,7 @@ def shop_failed(shop: dict, sstate: dict, err: Exception, test: bool) -> None:
 def load_env_file() -> None:
     if not ENV_FILE.exists():
         return
-    for line in ENV_FILE.read_text(encoding="utf-8").splitlines():
+    for line in ENV_FILE.read_text(encoding="utf-8-sig").splitlines():  # -sig: Notepad may add a BOM
         line = line.strip()
         if line and not line.startswith("#") and "=" in line:
             key, value = line.split("=", 1)
@@ -1112,6 +1122,9 @@ def load_env_file() -> None:
 
 
 def main() -> int:
+    for name in ("stdout", "stderr"):  # pythonw.exe (Windows scheduled task) has no console at all
+        if getattr(sys, name) is None:
+            setattr(sys, name, open(os.devnull, "w", encoding="utf-8"))
     for stream in (sys.stdout, sys.stderr):
         try:
             stream.reconfigure(encoding="utf-8", errors="replace")
@@ -1126,7 +1139,8 @@ def main() -> int:
     ap.add_argument("--test", action="store_true", help="dry run: show what each shop returns, send and save nothing")
     ap.add_argument("--notify-test", action="store_true", help="send a test notification and exit")
     ap.add_argument("--every", type=float, metavar="MINUTES", help="keep running, checking every N minutes")
-    ap.add_argument("--shop", help="only check shops whose name contains this text")
+    ap.add_argument("--shop", help="only check these shops, e.g. \"Public,Kaissa,Nerdom\" (part of a name is enough)")
+    ap.add_argument("--skip-shop", help="check every shop except these, e.g. \"Public,Kaissa,Nerdom\"")
     ap.add_argument("--headed", action="store_true", help="show the browser window")
     ap.add_argument("--debug", action="store_true", help="save screenshots and HTML of search pages to ./debug")
     args = ap.parse_args()

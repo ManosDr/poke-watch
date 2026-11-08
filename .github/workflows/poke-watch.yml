@@ -45,7 +45,9 @@ jobs:
           python -m playwright install --with-deps chromium
 
       - name: Check shops
-        run: python poke_watch.py
+        # Public, Kaissa and Nerdom block GitHub's servers, so your PC checks those
+        # three instead (setup_pc.bat). Everything else is checked from here.
+        run: python poke_watch.py --skip-shop "Public,Kaissa,Nerdom"
         env:
           NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}

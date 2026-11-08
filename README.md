@@ -47,9 +47,13 @@ price it read, your cap and where the stock status came from. If a shop says `ch
 The first real run will probably fire straight away, because some 30th items are on sale at retail
 right now (see below). When a run finds more than 3 things you get one summary push instead of many.
 
-## 3. Run it every hour (pick one)
+## 3. Run it every hour
 
-### A. GitHub Actions: runs even when your PC is off
+The setup that works: **GitHub checks most shops around the clock, and your PC checks Public, Kaissa
+and Nerdom**, because those three block GitHub's servers ("Access Denied" or a bot check). The GitHub
+workflow already skips them (`--skip-shop "Public,Kaissa,Nerdom"`).
+
+### A. GitHub Actions: every other shop, even when your PC is off
 
 1. Create a new **public** repository. Actions minutes are free for public repos; a private repo gets
    2,000 free minutes a month, which hourly runs would go through, so there change the cron line in
@@ -63,18 +67,18 @@ After each run the job commits `state.json`, which is how it remembers what it a
 GitHub pauses schedules in public repos after 60 days without activity; if that happens, one click on
 "Enable workflow" in the Actions tab turns it back on.
 
-GitHub runs the job from its own servers abroad. If a shop blocks them (you'd get a "check failing"
-push after 6 runs), run the script from your PC instead.
+GitHub runs the job from its own servers abroad. If another shop starts blocking them (you'd get a
+"check failing" push after 6 runs), add it to `--skip-shop` in the workflow and to `SHOPS` in `setup_pc.py`.
 
-### B. Windows Task Scheduler: runs while your PC is on
+### B. Your Windows PC: Public, Kaissa and Nerdom
 
-Find your Python with `where pythonw`, then (one line):
-
-```
-schtasks /Create /TN "Poke watch" /SC HOURLY /ST 00:07 /TR "\"C:\path\to\pythonw.exe\" \"C:\path\to\poke-watch\poke_watch.py\""
-```
-
-`pythonw.exe` means no console window pops up every hour. Output goes to `poke_watch.log` next to the script.
+1. Put this folder somewhere permanent that OneDrive doesn't sync, e.g. `C:\Users\<you>\poke-watch`.
+2. Double-click `setup_pc.bat`. If Windows asks whether to run it, choose Run (or More info > Run anyway).
+   It installs what it needs (Python packages and a browser), asks for your ntfy topic, sends a test
+   push, checks the three shops once so you see whether they let it in, and adds an hourly task (at
+   :47) to Windows Task Scheduler. Needs Python 3.9+ from python.org; it tells you if that's missing.
+3. That's it. It checks while the PC is on and awake. What each run did goes to `poke_watch.log`.
+   To stop it, double-click `remove_pc_task.bat`.
 
 ### C. Mac, Linux or a Raspberry Pi
 
