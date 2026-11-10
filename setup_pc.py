@@ -4,9 +4,21 @@
 Run it by double-clicking setup_pc.bat, which creates the Python environment first.
 Safe to run again: it keeps your topic and replaces the scheduled task.
   setup_pc.bat            install, test, and check those shops every hour from this PC
-  remove_pc_task.bat      stop the hourly check
+  remove_pc_task.bat      stop the hourly check (keeps all files)
+  uninstall_pc.bat        stop it and delete the environment and browser; asks before deleting your settings
+
+What this changes on the PC, and nothing else (no admin rights, registry, PATH or system settings):
+  .venv\\            a private Python environment with Playwright in it (made by setup_pc.bat)
+  browsers\\         the Chromium browser that Playwright downloads, kept inside this folder
+  poke_watch.env     your ntfy topic (written once, read by poke_watch.py)
+  poke_watch.log     what each check did, state.json what it already told you about
+  one Task Scheduler task "Poke watch" for your user account only, at normal (limited) rights
+It reads no browser profiles, passwords or personal files: Chromium starts with a blank temporary profile.
 """
+from __future__ import annotations
+
 import datetime as dt
+import os
 import re
 import subprocess
 import sys
@@ -20,6 +32,7 @@ TASK = "Poke watch"
 MINUTE = 47                      # runs at :47 every hour (GitHub runs at :17)
 PY = Path(sys.executable)        # this environment's python.exe
 PYW = PY.with_name("pythonw.exe")  # same, without a console window
+BROWSERS = HERE / "browsers"      # Chromium goes here instead of %LOCALAPPDATA%\\ms-playwright
 TOPIC_RE = re.compile(r"[A-Za-z0-9_-]{1,64}")
 
 
@@ -41,8 +54,8 @@ def yes(question: str, default: bool) -> bool:
     return default if not answer else answer.startswith("y")
 
 
-def run(args: list, what: str, check: bool = True) -> subprocess.CompletedProcess:
-    result = subprocess.run([str(a) for a in args])
+def run(args: list, what: str, check: bool = True, env: dict | None = None) -> subprocess.CompletedProcess:
+    result = subprocess.run([str(a) for a in args], env=env)
     if check and result.returncode != 0:
         raise SystemExit(f"\n{what} failed (exit code {result.returncode}). See the messages above.")
     return result
@@ -128,7 +141,7 @@ def schedule() -> None:
         raise SystemExit("\nThis folder's path is too long for Task Scheduler. Move the folder somewhere "
                          "shorter, like C:\\poke-watch, and run setup_pc.bat again.")
     run(["schtasks", "/Create", "/F", "/TN", TASK, "/SC", "HOURLY", "/MO", "1",
-         "/ST", start.strftime("%H:%M"), "/TR", command], "Creating the scheduled task")
+         "/ST", start.strftime("%H:%M"), "/RL", "LIMITED", "/TR", command], "Creating the scheduled task")
     # Task Scheduler's defaults skip runs on battery power and pile up runs; fix both.
     settings = ("$s = New-ScheduledTaskSettingsSet -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries "
                 "-StartWhenAvailable -MultipleInstances IgnoreNew -ExecutionTimeLimit (New-TimeSpan -Minutes 30); "
@@ -156,7 +169,9 @@ def main() -> int:
     step("Installing what the checker needs (the first time takes a few minutes)")
     run([PY, "-m", "pip", "install", "--disable-pip-version-check", "-r", HERE / "requirements.txt"],
         "Installing Playwright")
-    run([PY, "-m", "playwright", "install", "chromium"], "Downloading the Chromium browser")
+    BROWSERS.mkdir(exist_ok=True)
+    run([PY, "-m", "playwright", "install", "chromium"], "Downloading the Chromium browser",
+        env={**os.environ, "PLAYWRIGHT_BROWSERS_PATH": str(BROWSERS)})
 
     test_push()
 

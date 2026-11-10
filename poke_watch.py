@@ -27,6 +27,7 @@ import time
 import unicodedata
 import urllib.parse
 import urllib.request
+from urllib.parse import urlparse
 from datetime import datetime
 from pathlib import Path
 
@@ -170,6 +171,21 @@ STATE_FILE = Path(os.environ.get("POKE_STATE") or HERE / "state.json")
 LOG_FILE = HERE / "poke_watch.log"
 ENV_FILE = HERE / "poke_watch.env"
 DEBUG_DIR = HERE / "debug"
+BROWSERS_DIR = HERE / "browsers"     # setup_pc.py installs Chromium here, so uninstalling is just deleting the folder
+if BROWSERS_DIR.is_dir():
+    os.environ.setdefault("PLAYWRIGHT_BROWSERS_PATH", str(BROWSERS_DIR))
+
+# Third-party hosts the browser never talks to: analytics, ads, social widgets, payment widgets and
+# sign-in scripts. Product pages are read from the shop's own HTML, so none of these are needed.
+BLOCKED_HOSTS = (
+    "googletagmanager.com", "google-analytics.com", "analytics.google.com", "doubleclick.net",
+    "googleadservices.com", "googlesyndication.com", "facebook.net", "facebook.com", "fbcdn.net",
+    "connect.facebook.net", "hotjar.com", "clarity.ms", "cookiebot.com", "klarna.com", "klarnaservices.com",
+    "appleid.cdn-apple.com", "accounts.google.com", "tiktok.com", "snapchat.com", "twitter.com", "ads-twitter.com",
+    "linkedin.com", "pinterest.com", "criteo.com", "criteo.net", "taboola.com", "outbrain.com",
+    "scorecardresearch.com", "sentry.io", "newrelic.com", "nr-data.net", "segment.io", "segment.com",
+    "mixpanel.com", "hubspot.com", "intercom.io", "tawk.to", "smartsupp.com",
+)
 
 
 def norm(text) -> str:
@@ -224,8 +240,22 @@ class ShopError(Exception):
 
 # ------------------------------------------------------------- small helpers
 
+SECRET_ENV = ("NTFY_TOPIC", "NTFY_TOKEN", "TELEGRAM_BOT_TOKEN", "TELEGRAM_CHAT_ID")
+TOKEN_SHAPES = re.compile(r"bot\d{5,}:[A-Za-z0-9_-]{20,}|Bearer\s+\S+|tk_[A-Za-z0-9]{20,}")
+
+
+def scrub(text: str) -> str:
+    """Hide the notification topic, tokens and chat id if they ever end up in a log line."""
+    text = TOKEN_SHAPES.sub("<hidden>", text)
+    for name in SECRET_ENV:
+        value = os.environ.get(name, "").strip()
+        if len(value) >= 6:
+            text = text.replace(value, "<hidden>")
+    return text
+
+
 def log(msg: str) -> None:
-    line = f"{datetime.now():%Y-%m-%d %H:%M:%S} {msg}"
+    line = scrub(f"{datetime.now():%Y-%m-%d %H:%M:%S} {msg}")
     try:
         print(line, flush=True)
     except Exception:
@@ -403,7 +433,7 @@ def _post(url: str, data: bytes, headers: dict) -> bool:
                 raise RuntimeError(f"HTTP {resp.status}")
         except Exception as e:
             if attempt == 2:
-                log(f"  ! couldn't send notification via {url.split('/bot')[0]}: {short(e)}")
+                log(f"  ! couldn't send notification via {urlparse(url).hostname}: {short(e)}")
             else:
                 time.sleep(3)
     return False
@@ -619,11 +649,23 @@ def launch_browser(pw, headed: bool = False):
                      + "\n  ".join(errors))
 
 
-def _block_heavy(route):
-    if route.request.resource_type in ("image", "media", "font"):
-        route.abort()
-    else:
-        route.continue_()
+def host_blocked(host: str) -> bool:
+    return any(host == h or host.endswith("." + h) for h in BLOCKED_HOSTS)
+
+
+def make_router(seen: dict):
+    """Blocks images, fonts, media and tracker hosts; records every host the page asked for in `seen`."""
+    def router(route):
+        req = route.request
+        host = (urlparse(req.url).hostname or "").lower()
+        blocked = req.resource_type in ("image", "media", "font") or host_blocked(host)
+        if host:
+            seen[host] = "blocked" if blocked else "loaded"
+        if blocked:
+            route.abort()
+        else:
+            route.continue_()
+    return router
 
 
 def settle(page, idle_ms: int = 8000) -> None:
@@ -1033,7 +1075,8 @@ def run_once(args) -> int:
             seeded = sstate.get("seeded", False)
             ctx = browser.new_context(user_agent=ua, locale="el-GR", timezone_id="Europe/Athens",
                                       viewport={"width": 1366, "height": 900})
-            ctx.route("**/*", _block_heavy)
+            seen = {}
+            ctx.route("**/*", make_router(seen))
             page = ctx.new_page()
             try:
                 items, info = scan_shop(page, shop, sstate, args.debug)
@@ -1044,6 +1087,11 @@ def run_once(args) -> int:
                 continue
             finally:
                 ctx.close()
+                if getattr(args, "hosts", False):
+                    loaded = sorted(h for h, v in seen.items() if v == "loaded")
+                    blocked = sorted(h for h, v in seen.items() if v == "blocked")
+                    log(f"[{shop['name']}] hosts contacted: {', '.join(loaded) or '-'}")
+                    log(f"[{shop['name']}] hosts blocked: {', '.join(blocked) or '-'}")
             extra = f", {info['marketplace']} marketplace listing(s) ignored" if info["marketplace"] else ""
             if info.get("passed"):
                 extra += f", {info['passed']} skipped by name (singles, imports, other languages...)"
@@ -1142,6 +1190,7 @@ def main() -> int:
     ap.add_argument("--shop", help="only check these shops, e.g. \"Public,Kaissa,Nerdom\" (part of a name is enough)")
     ap.add_argument("--skip-shop", help="check every shop except these, e.g. \"Public,Kaissa,Nerdom\"")
     ap.add_argument("--headed", action="store_true", help="show the browser window")
+    ap.add_argument("--hosts", action="store_true", help="list every website each shop check contacted (loaded or blocked)")
     ap.add_argument("--debug", action="store_true", help="save screenshots and HTML of search pages to ./debug")
     args = ap.parse_args()
     load_env_file()

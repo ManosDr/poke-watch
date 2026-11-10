@@ -3,3 +3,5 @@ poke_watch.log
 debug/
 __pycache__/
 *.tmp
+.venv/
+browsers/

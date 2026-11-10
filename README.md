@@ -76,9 +76,26 @@ GitHub runs the job from its own servers abroad. If another shop starts blocking
 2. Double-click `setup_pc.bat`. If Windows asks whether to run it, choose Run (or More info > Run anyway).
    It installs what it needs (Python packages and a browser), asks for your ntfy topic, sends a test
    push, checks the three shops once so you see whether they let it in, and adds an hourly task (at
-   :47) to Windows Task Scheduler. Needs Python 3.9+ from python.org; it tells you if that's missing.
+   :47) to Windows Task Scheduler. Needs Windows 10 or 11 (64-bit) and Python 3.10 to 3.13 from
+   python.org; it tells you if Python is missing. Playwright is pinned to 1.63.0, the version this was tested with.
 3. That's it. It checks while the PC is on and awake. What each run did goes to `poke_watch.log`.
-   To stop it, double-click `remove_pc_task.bat`.
+   To pause it, double-click `remove_pc_task.bat` (removes only the scheduled task).
+   To remove everything, double-click `uninstall_pc.bat`, then delete the folder.
+
+**What setup changes on your PC:** the folder itself gets `.venv` (a private Python environment),
+`browsers` (Chromium, downloaded by Playwright), `poke_watch.env` (your topic), `state.json` and
+`poke_watch.log`; and Windows gets one scheduled task, "Poke watch", for your account only, at limited
+rights, that runs `pythonw.exe poke_watch.py --shop Public,Kaissa,Nerdom` from this folder. No admin
+rights, registry edits, PATH changes or system settings.
+
+**What it reads:** its own folder, and the shop websites. Chromium starts with a blank temporary profile,
+so it can't see your Chrome or Edge profile, saved passwords, cookies or Windows credentials.
+**What it talks to:** the shop sites (plus a few of their own content and search hosts), `ntfy.sh` for the
+push (or your own `NTFY_SERVER`), `api.telegram.org` only if you set Telegram, and PyPI and Playwright's
+download servers at install time. Analytics, ads, social, payment and sign-in hosts are blocked in the
+browser. Run `python poke_watch.py --test --hosts` to see exactly which hosts each shop check loaded or blocked.
+**Logs:** the log has shop names, product URLs and errors. Your topic, tokens and chat id are replaced with
+`<hidden>` if they ever appear in it.
 
 ### C. Mac, Linux or a Raspberry Pi
 
