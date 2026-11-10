@@ -37,7 +37,7 @@
    "alerted": false,
    "first_seen": 1794132427,
    "last_seen": 1794268800,
-   "missing": 0,
+   "missing": 1,
    "name": "Pokemon 30th Celebration 2-Pack Blister - EN",
    "price": 30.0,
    "shop": "Gamescape (via BestPrice)",
@@ -1156,6 +1156,17 @@
    "src": "BestPrice",
    "status": "in_stock"
   },
+  "https://www.bestprice.gr/to/229886463/pokemon-30th-celebration-figure-collection-mewtwo.html?seq=60&qo=30th+celebration&from=cat": {
+   "alerted": false,
+   "first_seen": 1794352942,
+   "last_seen": 1794268800,
+   "missing": 0,
+   "name": "Pokemon 30th Celebration Figure Collection MEWTWO",
+   "price": 89.99,
+   "shop": "boomy (via BestPrice)",
+   "src": "BestPrice",
+   "status": "in_stock"
+  },
   "https://www.bestprice.gr/to/229918933/kartes-pokemon-tcg-30th-celebration-ditto-premium-collection.html?seq=60&qo=30th+celebration&from=cat": {
    "alerted": false,
    "first_seen": 1794250175,
@@ -1200,6 +1211,17 @@
    "src": "BestPrice",
    "status": "in_stock"
   },
+  "https://www.bestprice.gr/to/229963628/pokemon-tcg-30th-celebration-figure-collection-pok145382.html?seq=60&qo=30th+celebration&from=cat": {
+   "alerted": false,
+   "first_seen": 1794352942,
+   "last_seen": 1794268800,
+   "missing": 0,
+   "name": "Pokemon TCG 30th Celebration Figure Collection POK145382 (1 τεμάχιο - τυχαία επιλογή)",
+   "price": 79.99,
+   "shop": "Gamescom (via BestPrice)",
+   "src": "BestPrice",
+   "status": "in_stock"
+  },
   "https://www.bestprice.gr/to/229965789/30th-celebration-ditto-premium-collection-pokemon.html?seq=60&qo=30th+celebration&from=cat": {
    "alerted": false,
    "first_seen": 1794250175,
@@ -1211,11 +1233,22 @@
    "src": "BestPrice",
    "status": "in_stock"
   },
+  "https://www.bestprice.gr/to/229965790/30th-celebration-figure-collection-mewtwo-pokemon.html?qo=30th+celebration&from=cat": {
+   "alerted": false,
+   "first_seen": 1794352942,
+   "last_seen": 1794268800,
+   "missing": 0,
+   "name": "30th Celebration Figure Collection Mewtwo - Pokemon",
+   "price": 69.99,
+   "shop": "Ygo (via BestPrice)",
+   "src": "BestPrice",
+   "status": "in_stock"
+  },
   "https://www.bestprice.gr/to/229965790/30th-celebration-figure-collection-mewtwo-pokemon.html?seq=60&qo=30th+celebration&from=cat": {
    "alerted": false,
    "first_seen": 1794250175,
    "last_seen": 1794268800,
-   "missing": 0,
+   "missing": 1,
    "name": "30th Celebration Figure Collection Mewtwo - Pokemon",
    "price": 69.99,
    "shop": "Ygo (via BestPrice)",
@@ -1259,7 +1292,7 @@
    "alerted": false,
    "first_seen": 1794250175,
    "last_seen": 1794268800,
-   "missing": 0,
+   "missing": 1,
    "name": "ΚΑΡΤΕΣ - POKEMON TCG 30TH CELEBRATION ULTRA PREMIUM COLLECTION ESPEON EX (POK104481)",
    "price": 349.0,
    "shop": "Toysworld (via BestPrice)",
@@ -1281,7 +1314,7 @@
    "alerted": false,
    "first_seen": 1794250175,
    "last_seen": 1794268800,
-   "missing": 0,
+   "missing": 1,
    "name": "ΚΑΡΤΕΣ - POKEMON TCG 30TH CELEBRATION ULTRA PREMIUM COLLECTION UMBREON EX (POK104481)",
    "price": 349.0,
    "shop": "Toysworld (via BestPrice)",
@@ -1329,7 +1362,7 @@
    "alerted": false,
    "first_seen": 1794250175,
    "last_seen": 1794268800,
-   "missing": 0,
+   "missing": 1,
    "name": "ΚΑΡΤΕΣ - POKEMON TCG 30TH CELEBRATION DITTO PREMIUM COLLECTION (POK104691)",
    "price": 84.9,
    "shop": "Toysworld (via BestPrice)",
@@ -1377,6 +1410,28 @@
    "name": "Pokemon TCG - 30th Celebration Mew Figure Collection",
    "price": 69.9,
    "shop": "Roll n Trade (via BestPrice)",
+   "src": "BestPrice",
+   "status": "in_stock"
+  },
+  "https://www.bestprice.gr/to/230088932/pokemon-tcg-30th-celebration-ditto-premium-collection-pok147423.html?seq=60&qo=30th+celebration&from=cat": {
+   "alerted": false,
+   "first_seen": 1794352942,
+   "last_seen": 1794268800,
+   "missing": 0,
+   "name": "Pokemon TCG 30th Celebration Ditto Premium Collection POK147423",
+   "price": 99.99,
+   "shop": "Gamescom (via BestPrice)",
+   "src": "BestPrice",
+   "status": "in_stock"
+  },
+  "https://www.bestprice.gr/to/230088933/pokemon-tcg-30th-celebration-ultra-premium-collection-pok144903.html?seq=60&qo=30th+celebration&from=cat": {
+   "alerted": false,
+   "first_seen": 1794352942,
+   "last_seen": 1794268800,
+   "missing": 0,
+   "name": "Pokemon TCG 30th Celebration Ultra Premium Collection POK144903 (1 τεμάχιο - τυχαία επιλογή)",
+   "price": 419.99,
+   "shop": "Gamescom (via BestPrice)",
    "src": "BestPrice",
    "status": "in_stock"
   }
