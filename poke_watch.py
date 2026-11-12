@@ -94,6 +94,15 @@ SHOPS = [
         "product_link": r"/paixnidia-me-kartes/|pokemon",
     },
     {
+        # WooCommerce shop. The search address is the standard WooCommerce one (not yet confirmed
+        # live); the watch page is always opened, so the Ultra-Premium Collection is covered either way.
+        "name": "The Game Box",
+        "home": "https://thegamebox.gr/",
+        "search": "https://thegamebox.gr/?s={q}&post_type=product",
+        "product_link": r"/product/",
+        "watch": ["https://thegamebox.gr/product/pokemon-tcg-30th-celebration-ultra-premium-collection-day-or-night/"],
+    },
+    {
         # Price comparison listing: covers dozens of Greek shops at once (Roll n Trade, Toys24,
         # Gamescom, OtakuStore, Toys4u, PerfecToys...). The price cap decides what's "retail".
         # Sorted cheapest first; its data can lag the shops by an hour or so.
