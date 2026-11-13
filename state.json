@@ -12,14 +12,15 @@
    "status": "out_of_stock"
   },
   "https://thegamebox.gr/product/pokemon-tcg-30th-celebration-battle-deck-espeon-ex-or-umbreon-ex/": {
+   "alerted": false,
    "first_seen": 1794529451,
    "last_seen": 1794528000,
    "missing": 0,
-   "name": "Pokémon TCG 30th Celebration Battle Deck Espeon ex or Umbreon ex - The Game Box",
-   "price": 628.0,
+   "name": "Pokémon TCG 30th Celebration Battle Deck Espeon ex or Umbreon ex",
+   "price": 34.99,
    "shop": "The Game Box",
    "src": "The Game Box",
-   "status": "unknown"
+   "status": "out_of_stock"
   },
   "https://thegamebox.gr/product/pokemon-tcg-30th-celebration-booster-bundle/": {
    "alerted": false,
@@ -88,14 +89,15 @@
    "status": "out_of_stock"
   },
   "https://thegamebox.gr/product/pokemon-tcg-30th-celebration-tech-sticker-collection/": {
+   "alerted": false,
    "first_seen": 1794529451,
    "last_seen": 1794528000,
    "missing": 0,
-   "name": "Pokémon TCG 30th Celebration Tech Sticker Collection - The Game Box",
-   "price": 948.0,
+   "name": "Pokémon TCG 30th Celebration Tech Sticker Collection",
+   "price": 29.99,
    "shop": "The Game Box",
    "src": "The Game Box",
-   "status": "unknown"
+   "status": "out_of_stock"
   },
   "https://thegamebox.gr/product/pokemon-tcg-30th-celebration-ultra-premium-collection-day-or-night/": {
    "alerted": false,
@@ -1180,7 +1182,7 @@
    "alerted": false,
    "first_seen": 1794250175,
    "last_seen": 1794528000,
-   "missing": 0,
+   "missing": 1,
    "name": "Pokemon 30th Celebration Ditto Premium Collection - EN",
    "price": 100.0,
    "shop": "Gamescape (via BestPrice)",
@@ -1276,12 +1278,12 @@
    "status": "in_stock"
   },
   "https://www.bestprice.gr/to/229807760/pokemon-30th-celebration-battle-deck.html?qo=30th+celebration&from=cat": {
-   "alerted": false,
-   "alerted_at": 1794132427,
+   "alerted": true,
+   "alerted_at": 1794587070,
    "alerted_price": 35.0,
    "first_seen": 1794132427,
-   "last_seen": 1794268800,
-   "missing": 2,
+   "last_seen": 1794528000,
+   "missing": 0,
    "name": "Pokemon 30th Celebration Battle Deck (POK104681)",
    "price": 35.0,
    "shop": "Funnybunny (via BestPrice)",
@@ -1639,7 +1641,7 @@
    "alerted": false,
    "first_seen": 1794452381,
    "last_seen": 1794528000,
-   "missing": 0,
+   "missing": 1,
    "name": "Pokemon Trading Card Games TGC 30th Celebration Poster Collection (EN) - 3 Booster Packs, 3 Foil Promo Articuno, Zapdos + Moltres με Συλλεκτική Αφίσα",
    "price": 53.9,
    "shop": "Astrongameclub (via BestPrice)",
