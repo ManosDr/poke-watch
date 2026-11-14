@@ -161,7 +161,7 @@ SKIP_NAMES = (r"\bcase\b|κιβωτιο|(?:booster|mini\s*tin|tin)s?\s*display|d
               r"\b\d{1,3}/\d{2,3}\b|single card|near mint|(?:lightly|moderately|heavily) played|\bpsa\s?\d|"
               r"\bcgc\b|\bbgs\b|graded|(?:illustration|hyper|secret|ultra|double|art) rare|full art|reverse holo|"
               r"\bmagic\b|\bmtg\b|yu-?gi-?oh|lorcana|one piece|digimon|dragon ?ball|flesh (?:and|&) blood|"
-              r"vanguard|wei(?:ss|ß)|union arena|star wars|gundam|battle spirits|riftbound|metazoo")
+              r"battle\s*decks?|vanguard|wei(?:ss|ß)|union arena|star wars|gundam|battle spirits|riftbound|metazoo")
 
 ALERT_ON = {"in_stock", "preorder"}  # drop "preorder" if you only want things that ship now; add
                                      # "store_only" to also hear about stock sold only in their shops
