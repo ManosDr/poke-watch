@@ -1908,7 +1908,8 @@
  },
  "shops": {
   "BestPrice": {
-   "fails": 0,
+   "fails": 1,
+   "last_error": "Page.goto: net::ERR_CONNECTION_RESET at https://www.bestprice.gr/cat/3024/kartes.html?q=30th%20celebration&o=2",
    "seeded": true,
    "warned": false
   },
@@ -1932,7 +1933,8 @@
    "last_error": "blocked by the site (HTTP 403, page title 'Access Denied')"
   },
   "The Game Box": {
-   "fails": 0,
+   "fails": 1,
+   "last_error": "couldn't find the site's search box (and https://thegamebox.gr/?s=30th%20celebration&post_type=product didn't work)",
    "seeded": true,
    "template": "https://thegamebox.gr/?s={q}&post_type=product",
    "warned": false
@@ -1944,7 +1946,8 @@
    "warned": false
   },
   "iConnect": {
-   "fails": 0,
+   "fails": 1,
+   "last_error": "couldn't find the site's search box (and https://iconnectstore.gr/index.php?route=product/search&search=30th%20celebration didn't work)",
    "seeded": true,
    "template": "https://iconnectstore.gr/index.php?route=product/search&search={q}",
    "warned": false
