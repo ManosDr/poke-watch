@@ -1,5 +1,16 @@
 {
  "items": {
+  "https://iconnectstore.gr/pok%C3%A9mon-tcg-30th-celebration-anniversary-mini-tin-various-artworks-25756": {
+   "alerted": false,
+   "first_seen": 1795039008,
+   "last_seen": 1794960000,
+   "missing": 0,
+   "name": "Pokémon TCG : 30th Celebration Anniversary Mini Tin (Various Artworks)",
+   "price": 27.9,
+   "shop": "iConnect",
+   "src": "iConnect",
+   "status": "in_stock"
+  },
   "https://thegamebox.gr/product/pokemon-tcg-30th-celebration-2-pack-blister/": {
    "alerted": false,
    "first_seen": 1794529451,
@@ -109,6 +120,17 @@
    "shop": "The Game Box",
    "src": "The Game Box",
    "status": "out_of_stock"
+  },
+  "https://www.bestprice.gr/to/225112455/pokemon-tcg-30th-celebration-elite-trainer-box.html?seq=60&qo=30th+celebration&from=cat": {
+   "alerted": false,
+   "first_seen": 1795039008,
+   "last_seen": 1794960000,
+   "missing": 0,
+   "name": "Pokemon TCG - 30th Celebration Elite Trainer Box",
+   "price": 149.9,
+   "shop": "Roll n Trade (via BestPrice)",
+   "src": "BestPrice",
+   "status": "in_stock"
   },
   "https://www.bestprice.gr/to/225119497/pokemon-tcg-30th-celebration-poster-collection-pok104671.html?qo=30th+celebration&from=cat": {
    "alerted": false,
@@ -223,8 +245,8 @@
   "https://www.bestprice.gr/to/225190007/pokemon-tcg-30th-celebration-ex-tin-pok146891.html?qo=30th+celebration&from=cat": {
    "alerted": false,
    "first_seen": 1794250175,
-   "last_seen": 1794787200,
-   "missing": 2,
+   "last_seen": 1794960000,
+   "missing": 0,
    "name": "Pokemon TCG 30th Celebration Ex Tin POK146891 (1 τεμάχιο - τυχαία επιλογή)",
    "price": 59.99,
    "shop": "Gamescom (via BestPrice)",
@@ -235,7 +257,7 @@
    "alerted": false,
    "first_seen": 1794304357,
    "last_seen": 1794960000,
-   "missing": 0,
+   "missing": 1,
    "name": "Pokemon TCG 30th Celebration Ex Tin POK146891 (1 τεμάχιο - τυχαία επιλογή)",
    "price": 59.99,
    "shop": "Gamescom (via BestPrice)",
@@ -887,8 +909,8 @@
   "https://www.bestprice.gr/to/227276399/pokemon-tcg-30th-celebration-6-booster-bundle-pok145207.html?seq=60&qo=30th+celebration&from=cat": {
    "alerted": false,
    "first_seen": 1794652533,
-   "last_seen": 1794873600,
-   "missing": 2,
+   "last_seen": 1794960000,
+   "missing": 0,
    "name": "Pokemon TCG 30th Celebration 6 Booster Bundle POK145207",
    "price": 98.99,
    "shop": "CosmoMarket (via BestPrice)",
@@ -1187,7 +1209,7 @@
    "alerted_price": 34.9,
    "first_seen": 1794132427,
    "last_seen": 1794528000,
-   "missing": 0,
+   "missing": 1,
    "name": "Pokemon TCG - 30th Celebration Espeon ex Battle Deck",
    "price": 34.9,
    "shop": "Roll n Trade (via BestPrice)",
@@ -1260,8 +1282,8 @@
   "https://www.bestprice.gr/to/229767707/pokemon-tcg-30th-celebration-mewtwo-figure-collection-box-sets-pok104521.html?seq=60&qo=30th+celebration&from=cat": {
    "alerted": false,
    "first_seen": 1794132427,
-   "last_seen": 1794182400,
-   "missing": 2,
+   "last_seen": 1794960000,
+   "missing": 0,
    "name": "Pokemon TCG 30th Celebration Mewtwo Figure Collection Box Sets - POK104521",
    "price": 99.99,
    "shop": "Funbox (via BestPrice)",
@@ -1775,7 +1797,7 @@
    "alerted": false,
    "first_seen": 1794481764,
    "last_seen": 1794873600,
-   "missing": 1,
+   "missing": 2,
    "name": "Pokemon TCG - 30th Celebration Ultra Premium Collection",
    "price": 400.0,
    "shop": "SyndiQ Games (via BestPrice)",
@@ -1876,7 +1898,7 @@
    "alerted": false,
    "first_seen": 1794676098,
    "last_seen": 1794873600,
-   "missing": 1,
+   "missing": 2,
    "name": "Pokemon TCG - 30th Celebration Elite Trainer Box",
    "price": 179.9,
    "shop": "Buzzer (via BestPrice)",
@@ -1887,7 +1909,7 @@
    "alerted": false,
    "first_seen": 1794676098,
    "last_seen": 1794960000,
-   "missing": 0,
+   "missing": 1,
    "name": "Pokemon Knock Out Collection 30th Celebration (EN)",
    "price": 97.4,
    "shop": "EasyOffers (via BestPrice)",
@@ -1898,7 +1920,7 @@
    "alerted": false,
    "first_seen": 1794954239,
    "last_seen": 1794960000,
-   "missing": 0,
+   "missing": 1,
    "name": "Pokemon TCG: 30th Celebration Figure Collection (POK104521) MEW",
    "price": 74.9,
    "shop": "Popster (via BestPrice)",
@@ -1908,8 +1930,7 @@
  },
  "shops": {
   "BestPrice": {
-   "fails": 1,
-   "last_error": "Page.goto: net::ERR_CONNECTION_RESET at https://www.bestprice.gr/cat/3024/kartes.html?q=30th%20celebration&o=2",
+   "fails": 0,
    "seeded": true,
    "warned": false
   },
@@ -1933,8 +1954,7 @@
    "last_error": "blocked by the site (HTTP 403, page title 'Access Denied')"
   },
   "The Game Box": {
-   "fails": 1,
-   "last_error": "couldn't find the site's search box (and https://thegamebox.gr/?s=30th%20celebration&post_type=product didn't work)",
+   "fails": 0,
    "seeded": true,
    "template": "https://thegamebox.gr/?s={q}&post_type=product",
    "warned": false
@@ -1946,8 +1966,7 @@
    "warned": false
   },
   "iConnect": {
-   "fails": 1,
-   "last_error": "couldn't find the site's search box (and https://iconnectstore.gr/index.php?route=product/search&search=30th%20celebration didn't work)",
+   "fails": 0,
    "seeded": true,
    "template": "https://iconnectstore.gr/index.php?route=product/search&search={q}",
    "warned": false
