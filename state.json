@@ -2020,7 +2020,8 @@
  },
  "shops": {
   "BestPrice": {
-   "fails": 0,
+   "fails": 1,
+   "last_error": "Page.goto: net::ERR_CONNECTION_RESET at https://www.bestprice.gr/cat/3024/kartes.html?q=30th%20celebration&o=2",
    "seeded": true,
    "warned": false
   },
